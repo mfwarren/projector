@@ -42,12 +42,14 @@ class Common(Configuration):
         'allauth',  # registration
         'allauth.account',  # registration
         'allauth.socialaccount',  # registration
+        'guardian',
     )
 
     # Apps specific for this project go here.
     LOCAL_APPS = (
         'users',  # custom users app
         # Your stuff: custom apps go here
+        'main',
     )
 
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -111,7 +113,7 @@ class Common(Configuration):
 
     # DATABASE CONFIGURATION
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
-    DATABASES = values.DatabaseURLValue('postgres://localhost/projector')
+    DATABASES = values.DatabaseURLValue('postgres://postgres:password@localhost/projector')
     # END DATABASE CONFIGURATION
 
     # CACHING
@@ -213,7 +215,10 @@ class Common(Configuration):
     AUTHENTICATION_BACKENDS = (
         "django.contrib.auth.backends.ModelBackend",
         "allauth.account.auth_backends.AuthenticationBackend",
+        'guardian.backends.ObjectPermissionBackend',
     )
+
+    ANONYMOUS_USER_ID = None
 
     # Some really nice defaults
     ACCOUNT_AUTHENTICATION_METHOD = "username"
