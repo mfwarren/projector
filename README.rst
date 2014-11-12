@@ -1,8 +1,14 @@
 projector
 ==============================
 
-estimate project costs
+This is a web based tool for estimating the time duration of projects.  It has the
+following advanced features:
 
+1. Project Management users can create new projects, lay out the list of tasks, and invite other users to submit estimates against them.  You can have up to 100 team members provide estimates for a project.
+2. Team members invited to estimate can go through the tasks and submit a statistical estimate.  By providing a low, best guess, and high estimate the app can more realistically capture the uncertainty in a person's numbers.
+3. An AI algorithm lets you benefit from advanced **reference class forecasting**. By looking at similar tasks in past projects.  Past actual durations can be used in new estimates.
+4. Estimates and reference class forecasted durations are combined using a **Monte Carlo simulation** which calculates a range of possible estimates and their statistical likeliness.
+5. The final estimate can be publically or privately shared as view only.
 
 LICENSE: BSD
 
@@ -84,7 +90,7 @@ It's time to write the code!!!
 Deployment
 ------------
 
-It is possible to deploy to Heroku or to your own server by using Dokku, an open source Heroku clone. 
+It is possible to deploy to Heroku or to your own server by using Dokku, an open source Heroku clone.
 
 Heroku
 ^^^^^^
@@ -113,7 +119,7 @@ Dokku
 ^^^^^
 
 You need to make sure you have a server running Dokku with at least 1GB of RAM. Backing services are
-added just like in Heroku however you must ensure you have the relevant Dokku plugins installed. 
+added just like in Heroku however you must ensure you have the relevant Dokku plugins installed.
 
 .. code-block:: bash
 

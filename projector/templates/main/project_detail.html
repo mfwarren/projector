@@ -13,6 +13,9 @@
     </div>
   </div>
 
+{% for task in object.tasks %}
+{{ task }}
+{% endfor %}
 {% if object == request.user %}
 <!-- Action buttons -->
 <div class="row">

@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from autoslug import AutoSlugField
 
 
 class Project(models.Model):
@@ -14,6 +15,11 @@ class Project(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     hide_estimates = models.BooleanField(default=True)
+    slug = AutoSlugField(populate_from='name')  # for nice urls for logged in users
+    public_token = models.CharField(max_length=64, null=True)  # for unique public urls
+
+    def tasks(self):
+        return Task.objects.filter(project=self)
 
     class Meta:
         permissions = (
@@ -33,11 +39,17 @@ class Task(models.Model):
     group tasks and assign them to teams or people.
     """
     description = models.CharField(max_length=255)
-    assignee = models.CharField(max_length=255)
+    assignee = models.CharField(max_length=255, null=True, blank=True)
     project = models.ForeignKey(Project)
     is_enabled = models.BooleanField(default=True)
-    group = models.CharField(max_length=64)
-    actual_duration = models.FloatField()  # used for reference class forecasting
+    group = models.CharField(max_length=64, null=True, blank=True)
+    actual_duration = models.FloatField(null=True, blank=True)  # used for reference class forecasting
+
+    def estimates(self):
+        return TaskEstimate.objects.filter(task=self)
+
+    def __unicode__(self):
+        return self.description
 
 
 class TaskEstimate(models.Model):
@@ -59,9 +71,12 @@ class TaskEstimate(models.Model):
     minimum = models.FloatField()
     maximum = models.FloatField()
     curve = models.CharField(max_length=32, choices=CURVES)
-    comments = models.TextField()
+    comments = models.TextField(null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     is_na = models.BooleanField(default=False)  # user able to flag task as NA for them to estimate
+
+    def __unicode__(self):
+        return "%f hours for %s" % (self.likely, self.task.description)
 
 
 class Invitation(models.Model):
