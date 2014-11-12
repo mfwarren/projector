@@ -29,8 +29,8 @@ class ProjectListView(ListView):
 class ProjectDetailView(LoginRequiredMixin, DetailView):
     model = Project
     # These next two lines tell the view to index lookups by username
-    # slug_field = "name"
-    # slug_url_kwarg = "name"
+    slug_field = "slug"
+    slug_url_kwarg = "name"
 
     def get_queryset(self):
         return get_objects_for_user(self.request.user, ['main.owns_project', 'main.estimate_project', 'main.view_project'], any_perm=True)

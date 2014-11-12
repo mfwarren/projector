@@ -4,7 +4,7 @@ from main.views import ProjectListView, ProjectDetailView, ProjectUpdateView, Pr
 urlpatterns = [
     url(r'^projects/$', ProjectListView.as_view(), name='project_list'),
     url(
-        regex=r'^project/(?P<pk>\d+)/$',
+        regex=r'^project/(?P<name>[\w.@+-]+)/$',
         view=ProjectDetailView.as_view(),
         name='project_detail'
     ),
