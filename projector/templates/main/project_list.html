@@ -2,7 +2,7 @@
 {% load static %}{% load i18n %}
 {% load avatar_tags %}
 
-{% block title %}Projects{% endblock %}
+{% block title %}Your Projects{% endblock %}
 
 {% block content %}
 
@@ -10,7 +10,7 @@
 
   <div class="row">
     <div class="col-xs-12">
-      <h2>Projects</h2>
+      <h2>Your Projects</h2>
     </div>
   </div>
 
@@ -20,7 +20,7 @@
           {% for project in project_list %}
             <a href="{% url 'main:project_detail' project.pk %}" class="list-group-item">
               <h4 class="list-group-item-heading">{{ project.name }}</h4>
-              <p class="list-group-item-text">{{ project }}</p>
+              <p class="list-group-item-text">{{ project.smart_blurb }}</p>
             </a>
           {% endfor %}
       </div>

@@ -21,6 +21,9 @@ class Project(models.Model):
     def tasks(self):
         return Task.objects.filter(project=self)
 
+    def smart_blurb(self):
+        return "put something here about last updated or total duration"
+
     class Meta:
         permissions = (
             ('estimate_project', 'Estimate Project'),  # permission to submit estimate
@@ -44,6 +47,8 @@ class Task(models.Model):
     is_enabled = models.BooleanField(default=True)
     group = models.CharField(max_length=64, null=True, blank=True)
     actual_duration = models.FloatField(null=True, blank=True)  # used for reference class forecasting
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def estimates(self):
         return TaskEstimate.objects.filter(task=self)
@@ -74,6 +79,8 @@ class TaskEstimate(models.Model):
     comments = models.TextField(null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     is_na = models.BooleanField(default=False)  # user able to flag task as NA for them to estimate
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return "%f hours for %s" % (self.likely, self.task.description)
@@ -89,6 +96,7 @@ class Invitation(models.Model):
     project = models.ForeignKey(Project)
     permission = models.CharField(max_length=32)  # estimate/view/own
     token = models.CharField(max_length=64)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
         return "from %s to %s for %s to %s" % (self.from_user.username, self.to_email,
