@@ -1,9 +1,8 @@
-from django.shortcuts import render
 from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 
 # Create your views here.
 from django.views.generic import DetailView
-from django.views.generic import RedirectView
 from django.views.generic import UpdateView
 from django.views.generic import CreateView
 from django.views.generic import ListView
@@ -14,7 +13,6 @@ from guardian.shortcuts import assign_perm
 # Only authenticated users can access views using this.
 from braces.views import LoginRequiredMixin
 
-from django.http import HttpResponse
 from main.models import Project
 from .forms import ProjectForm
 
@@ -32,32 +30,26 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
     slug_field = "slug"
     slug_url_kwarg = "name"
 
-    def get_queryset(self):
+    def get_queryset(self, *args, **kwargs):
         return get_objects_for_user(self.request.user, ['main.owns_project', 'main.estimate_project', 'main.view_project'], any_perm=True)
 
 
 class ProjectCreateView(LoginRequiredMixin, CreateView):
-
+    model = Project
     form_class = ProjectForm
 
-    # we already imported User in the view code above, remember?
-    model = Project
-
     def form_valid(self, form):
-        form.instance.user = self.request.user
-        resp = super(ProjectCreateView, self).form_valid(form)
-        if form.instance.pk:
-            assign_perm('owns_project', self.request.user, form.instance)
-        return resp
+        self.object = form.save(commit=False)
+        self.object.user = self.request.user
+        self.object.save()
+        if self.object.pk:
+            assign_perm('owns_project', self.request.user, self.object)
+        return HttpResponseRedirect(self.get_success_url())
 
     # send the user back to their own page after a successful update
     def get_success_url(self):
         return reverse("main:project_detail",
-                       kwargs={"pk": self.object.pk})
-
-    def get_object(self):
-        # Only get the User record for the user making the request
-        return Project.objects.get(pk=self.object.pk)
+                       kwargs={"name": self.object.slug})
 
 
 class ProjectUpdateView(LoginRequiredMixin, UpdateView):
@@ -70,11 +62,8 @@ class ProjectUpdateView(LoginRequiredMixin, UpdateView):
     # send the user back to their own page after a successful update
     def get_success_url(self):
         return reverse("main:project_detail",
-                       kwargs={"pk": self.object.pk})
+                       kwargs={"name": self.object.slug})
 
     def get_object(self):
         # Only get the User record for the user making the request
-        p = Project.objects.get(pk=self.object.pk)
-        if self.request.user.has_perm('main.owns_project', p):
-            return p
-        return None
+        return get_objects_for_user(self.request.user, 'main.owns_project').filter(slug=self.kwargs['slug']).first()

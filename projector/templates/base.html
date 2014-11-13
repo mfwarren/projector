@@ -41,6 +41,7 @@
           <li><a href="{% url 'about' %}">About</a></li>
 
           {% if request.user.is_authenticated %}
+            <li><a href="{% url 'main:project_list' %}">Projects</a></li>
             <li><a href="{% url 'users:detail' request.user.username  %}">{% trans "My Profile" %}</a></li>
             <li><a href="{% url 'account_logout' %}">{% trans "Logout" %}</a></li>
           {% else %}
@@ -52,7 +53,7 @@
     </div>
 
     <div class="container">
-        
+
       {% if messages %}
           {% for message in messages %}
               <div class="alert {% if message.tags %}alert-{{ message.tags }}"{% endif %}>{{ message }}</div>
@@ -64,7 +65,7 @@
       {% endblock content %}
 
     </div> <!-- /container -->
-    
+
     {% block modal %}{% endblock modal %}
 
     <!-- Le javascript
@@ -84,4 +85,3 @@
     {% endblock javascript %}
   </body>
 </html>
- 
