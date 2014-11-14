@@ -43,6 +43,7 @@ class Common(Configuration):
         'allauth.account',  # registration
         'allauth.socialaccount',  # registration
         'guardian',
+        'rest_framework',
     )
 
     # Apps specific for this project go here.

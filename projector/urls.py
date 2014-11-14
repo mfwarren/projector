@@ -31,4 +31,7 @@ urlpatterns = patterns('',
     # Your stuff: custom urls go here
     url(r'', include('main.urls', namespace='main')),
 
+    # REST Framework
+    url(r'api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
