@@ -6,7 +6,7 @@ app.controller('TaskController', [ '$http', function($http){
   var project = this;
   project.tasks = [];
 
-  this.tasks = $http.get('tasks.json').success(function(data){
+  this.tasks = $http.get('tasks/').success(function(data){
     project.tasks = data;
     console.log(data);
   });

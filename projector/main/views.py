@@ -6,6 +6,7 @@ from django.views.generic import DetailView
 from django.views.generic import UpdateView
 from django.views.generic import CreateView
 from django.views.generic import ListView
+from rest_framework import generics, permissions
 
 from guardian.shortcuts import get_objects_for_user
 from guardian.shortcuts import assign_perm
@@ -13,8 +14,9 @@ from guardian.shortcuts import assign_perm
 # Only authenticated users can access views using this.
 from braces.views import LoginRequiredMixin
 
-from main.models import Project
+from main.models import Project, Task
 from .forms import ProjectForm
+from .serializers import TaskSerializer
 
 
 class ProjectListView(ListView):
@@ -60,3 +62,42 @@ class ProjectUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_object(self):
         return get_objects_for_user(self.request.user, 'main.owns_project').filter(slug=self.kwargs['slug']).first()
+
+
+class TaskListCreate(generics.ListCreateAPIView):
+    model = Task
+    serializer_class = TaskSerializer
+
+    def get_queryset(self, *args, **kwargs):
+        return get_objects_for_user(self.request.user, 'main.owns_project').filter(slug=self.kwargs['slug']).first().tasks()
+
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            return (permissions.IsAuthenticated(),)
+        return (permissions.AllowAny(),)
+
+    def pre_save(self, obj):
+        obj.author = self.request.user
+        return super(TaskListCreate, self).pre_save(obj)
+
+
+class TaskList(generics.ListAPIView):
+    model = Task
+
+    def get_queryset(self, *args, **kwargs):
+        return get_objects_for_user(self.request.user, 'main.owns_project').filter(slug=self.kwargs['slug']).first().tasks()
+
+
+class TaskRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = TaskSerializer
+
+    def get_queryset(self, *args, **kwargs):
+        return get_objects_for_user(self.request.user, 'main.owns_project').filter(slug=self.kwargs['slug']).first().tasks()
+
+    def get_permissions(self):
+        if self.request.method not in permissions.SAFE_METHODS:
+            return (IsAuthenticatedAndOwnsObject(),)
+        return (permissions.AllowAny(),)
+    # def render_to_response(self, context, **response_kwargs):
+    #     print context
+    #     return self.render_to_json_response(context, **response_kwargs)
