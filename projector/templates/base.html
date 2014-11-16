@@ -27,6 +27,12 @@
 
     {% block angular %}
       <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+      <script type="text/javascript" src="{% static 'js/projector.js' %}"></script>
+      <script type="text/javascript" src="{% static 'js/projector.config.js' %}"></script>
+      <script type="text/javascript" src="{% static 'js/projector.routes.js' %}"></script>
+      <script type="text/javascript" src="{% static 'js/main/authentication.module.js' %}"></script>
+      <script type="text/javascript" src="{% static 'js/main/services/tasks.service.js' %}"></script>
+      <script type="text/javascript" src="{% static 'js/main/controllers/register.controller.js' %}"></script>
     {% endblock %}
 
   </head>
