@@ -30,3 +30,6 @@ node_modules/
 
 # Campass
 .sass-cache
+
+# Bower components
+projector/static/bower_components/

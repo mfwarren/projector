@@ -38,6 +38,9 @@ pytz==2014.7
 # Your custom requirements go here
 django-guardian
 
+
+django-compressor==1.4
+
 # API
 djangorestframework
 markdown

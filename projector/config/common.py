@@ -44,6 +44,7 @@ class Common(Configuration):
         'allauth.socialaccount',  # registration
         'guardian',
         'rest_framework',
+        'compressor',
     )
 
     # Apps specific for this project go here.
