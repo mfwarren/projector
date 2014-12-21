@@ -9,12 +9,12 @@
     .module('projector.layout.controllers')
     .controller('IndexController', IndexController);
 
-  IndexController.$inject = ['$scope', 'Authentication', 'Posts', 'Snackbar'];
+  IndexController.$inject = ['$scope', 'Authentication', 'Posts'];
 
   /**
    * @namespace IndexController
    */
-  function IndexController($scope, Authentication, Posts, Snackbar) {
+  function IndexController($scope, Authentication, Posts) {
     var vm = this;
 
     vm.isAuthenticated = Authentication.isAuthenticated();
@@ -53,7 +53,7 @@
        * @desc Show snackbar with error
        */
       function postsErrorFn(data, status, headers, config) {
-        Snackbar.error(data.error);
+        // Snackbar.error(data.error);
       }
     }
   }
