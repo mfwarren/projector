@@ -39,7 +39,7 @@
     * @memberOf projector.authentication.controllers.LoginController
     */
     function login() {
-      Authentication.login(vm.username, vm.password);
+      Authentication.login(vm.email, vm.password);
     }
   }
 })();
